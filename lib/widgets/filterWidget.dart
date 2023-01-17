@@ -28,25 +28,6 @@ class _FilterWidgetState extends State<FilterWidget> {
                               style: theme.textTheme.button,
                             ),
                           ],
-                        );/*TextButton(
-                        onPressed: () {},
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              widget.imageName,
-                              width: 20,
-                              height: 20,
-                              fit: BoxFit.fill,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              widget.genre,
-                              style: theme.textTheme.button,
-                            ),
-                          ],
-                        ),
-                      );*/
+                        );
   }
 }

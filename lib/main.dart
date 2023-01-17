@@ -40,21 +40,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    Movie movie = Movie(
-        88,
-        5.2,
-        "aymen sellaouti",
-        0.8,
-        "https://cdn.shopify.com/s/files/1/0747/3829/products/mHP0217_1024x1024.jpeg?v=1571444284",
-        "en",
-        "Spain",
-        "Jaws",
-        ["Horror", "Drama", "Adventure"],
-        "https://cdn.mos.cms.futurecdn.net/QfpYiWt35GZfU2Gd7pztQ8.png",
-        true,
-        "An insatiable great white shark terrorizes the townspeople of Amity Island, The police chief, an oceanographer and a grizzled shark hunter seek to destroy the bloodthirsty beast",
-        DateTime(1975, 06, 18),
-        120);
-    return HomePage(); //MoviePage(movie: movie,);
+    
+    return HomePage(); 
   }
 }

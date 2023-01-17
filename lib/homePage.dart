@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movie_app/Models/filters.dart';
 import 'package:movie_app/Models/pickedFilters.dart';
-import 'package:movie_app/moviePage.dart';
 import 'package:movie_app/search.dart';
 import 'package:movie_app/watchList.dart';
-import 'package:movie_app/widgets/filterWidget.dart';
 import 'package:movie_app/widgets/firstPosterCard.dart';
 import 'package:movie_app/widgets/posterCard.dart';
-import 'package:scroll_snap_list/scroll_snap_list.dart';
-import 'package:animations/animations.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'Models/movie.dart';
 

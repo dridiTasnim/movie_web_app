@@ -59,7 +59,7 @@ class _WatchListCardState extends State<WatchListCard> {
                           onPressed: () {},
                           icon: Icon(Icons.bookmark_rounded),
                           splashRadius: 5,
-                          color: Color(0xFFF37515) //const Color(0xFF1D2024),
+                          color: Color(0xFFF37515) 
                           ),
                       IconButton(
                           onPressed: () {
@@ -67,7 +67,7 @@ class _WatchListCardState extends State<WatchListCard> {
                           },
                           icon: Icon(Icons.delete),
                           splashRadius: 5,
-                          color: Color(0xFFF37515) //const Color(0xFF1D2024),
+                          color: Color(0xFFF37515) 
                           ),
                     ],
                   );
