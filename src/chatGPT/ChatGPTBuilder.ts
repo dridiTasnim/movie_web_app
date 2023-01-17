@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 export class ChatGPTBuilder {
 
     chatGPTQuestion: string;
@@ -7,8 +8,8 @@ export class ChatGPTBuilder {
     filmGenre: string;
     filmCountry: string;
 
-    addWhiteSpace(): void{
-        this.chatGPTQuestion += ' '; 
+    addWhiteSpace(): void {
+        this.chatGPTQuestion += ' ';
     }
 
     setBaseQuestion(): void {
@@ -16,37 +17,37 @@ export class ChatGPTBuilder {
         this.addWhiteSpace();
     }
 
-    addMovieAdjectives(ajectives: string[]): void{
+    addMovieAdjectives(ajectives: string[]): void {
         ajectives.forEach(adjective => {
             this.chatGPTQuestion += adjective;
             this.addWhiteSpace();
         });
     }
 
-    addMovieAdjectivesSuffix(): void{
+    addMovieAdjectivesSuffix(): void {
         this.chatGPTQuestion += 'movie';
         this.addWhiteSpace();
     }
 
-    addDurationCondition(filmDuration: string): void{
+    addDurationCondition(filmDuration: string): void {
         this.chatGPTQuestion += 'with duration ';
         this.chatGPTQuestion += filmDuration;
         this.addWhiteSpace();
     }
 
-    addAgeCondition(filmAgeRestriction: string): void{
+    addAgeCondition(filmAgeRestriction: string): void {
         this.chatGPTQuestion += 'and age restriction ';
         this.chatGPTQuestion += filmAgeRestriction;
         this.chatGPTQuestion += ' ';
     }
 
-    addQuestionSuffix(): void{
+    addQuestionSuffix(): void {
         this.chatGPTQuestion += '?';
         this.addWhiteSpace();
         this.chatGPTQuestion += " endChatGPT"; // put in a constant file
     }
 
-    build(filmAgeRestriction: string, filmDuration: string, filmGenre: string, filmCountry: string, ): string {
+    build(filmAgeRestriction: string, filmDuration: string, filmGenre: string, filmCountry: string,): string {
         this.setBaseQuestion();
         this.addMovieAdjectives([filmCountry, filmGenre]);
         this.addMovieAdjectivesSuffix();
