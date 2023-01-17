@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:movie_web_app/features/home_page/dummy_data.dart';
 import 'package:movie_web_app/features/home_page/widgets/first_post_card.dart';
@@ -14,6 +16,7 @@ import 'package:movie_web_app/models/picked_filters.dart';
 import 'package:movie_web_app/models/user_account.dart';
 import 'package:movie_web_app/shared/colors.dart';
 import 'package:swipe_cards/swipe_cards.dart';
+import 'package:movie_web_app/service/data_sources.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -29,13 +32,21 @@ class _HomePageState extends State<HomePage> {
   List<SwipeItem> swipeItems = <SwipeItem>[];
   MatchEngine _matchEngine = MatchEngine();
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-
+  late Future<List<Movie>?> movies1;
+  int number = Random().nextInt(7);
   @override
   void initState() {
     super.initState();
+
     () async {
-      movies = [movie, movie2, movie3];
+      movies = [movie1, movie2, movie3, movie5, movie6, movie7, movie8];
     }();
+    List<String> names = [
+      "Swipe To Read Some Facts About Our Movie Of The Day",
+      movies[number].releaseDate,
+     "+18 : "+movies[number].adult.toString(),
+     "popularity : "+ movies[number].popularity.toString()
+    ];
     for (int i = 0; i < names.length; i++) {
       swipeItems.add(SwipeItem(
         content: Content(text: names[i], color: colors[i]),
@@ -43,6 +54,12 @@ class _HomePageState extends State<HomePage> {
     }
 
     _matchEngine = MatchEngine(swipeItems: swipeItems);
+    // _getmovies();
+    //print(movies1);
+  }
+
+  void _getmovies() {
+    movies1 = DataSources().getMovies();
   }
 
   @override
@@ -127,7 +144,7 @@ class _HomePageState extends State<HomePage> {
               child: ListView(
                 scrollDirection: Axis.vertical,
                 children: [
-                  Row(
+                 /* Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: List<Widget>.generate(
                       homePageGenres.length,
@@ -151,7 +168,7 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     ).toList(),
-                  ),
+                  ),*/
                   Row(
                     children: [
                       Padding(
@@ -159,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                         child: SizedBox(
                             height: screenHeight / 2,
                             width: screenWidth / 2,
-                            child: FirstPosterCard(movie: movies[0])),
+                            child: FirstPosterCard(movie: movies[number])),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(20),
@@ -215,9 +232,9 @@ class _HomePageState extends State<HomePage> {
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (BuildContext context, int index) {
-                          return PosterCard(movie: movies[1]);
+                          return PosterCard(movie: movies[index]);
                         },
-                        itemCount: 1,
+                        itemCount: movies.length,
                       ),
                     ),
                   ),
@@ -235,12 +252,12 @@ class _HomePageState extends State<HomePage> {
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (BuildContext context, int index) {
-                          return PosterCard(movie: movies[2]);
+                          return PosterCard(movie: movies[index]);
                         },
-                        itemCount: 1,
+                        itemCount: movies.length,
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),

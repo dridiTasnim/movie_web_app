@@ -81,7 +81,7 @@ class _MoviePageState extends State<MoviePage> {
                             height: 10,
                           ),
                           Text(
-                              "Release Date : ${widget.movie.releaseDate.year}",
+                              "Release Date : ${widget.movie.releaseDate}",
                               style: theme.textTheme.subtitle2),
                           const SizedBox(
                             height: 10,
@@ -194,7 +194,7 @@ class _MoviePageState extends State<MoviePage> {
                       Text("Genres", style: theme.textTheme.bodyText1),
                       Row(
                         children: [
-                          for (var genre in widget.movie.genre)
+                          for (var genre in widget.movie.genre_ids)
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 5),
@@ -205,7 +205,7 @@ class _MoviePageState extends State<MoviePage> {
                                         Radius.circular(25))),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text(genre,
+                                  child: Text(widget.movie.genre_ids[0].toString(),
                                       style: theme.textTheme.bodyText1),
                                 ),
                               ),
@@ -221,27 +221,11 @@ class _MoviePageState extends State<MoviePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Country of origin",
-                        style: theme.textTheme.bodyText1,
-                      ),
-                      Text(
-                        widget.movie.country,
-                        style: theme.textTheme.bodyText1,
-                      ),
-                    ],
-                  ),
-                  Divider(
-                    color: AppColors.white.withOpacity(0.6),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
                         "Runtime",
                         style: theme.textTheme.bodyText1,
                       ),
                       Text(
-                        "${widget.movie.runTime} Min",
+                        "${widget.movie.runtime} Min",
                         style: theme.textTheme.bodyText1,
                       ),
                     ],

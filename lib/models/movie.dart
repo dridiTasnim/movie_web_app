@@ -5,14 +5,13 @@ class Movie {
   double popularity;
   String posterPath;
   String originalLanguage;
-  String country;
   String originalTitle;
-  List<String> genre;
+  List<int> genre_ids;
   String backdropPath;
   bool adult;
   String overview;
-  DateTime releaseDate;
-  int runTime;
+  String releaseDate;
+  int runtime;
 
   Movie(
       this.movieId,
@@ -21,30 +20,27 @@ class Movie {
       this.popularity,
       this.posterPath,
       this.originalLanguage,
-      this.country,
       this.originalTitle,
-      this.genre,
+      this.genre_ids,
       this.backdropPath,
       this.adult,
       this.overview,
       this.releaseDate,
-      this.runTime);
+      this.runtime);
 
-  factory Movie.fromJson(Map<String, dynamic> json) {
-    return Movie(
-        json['movie_id'],
-        json['rate'],
-        json['title'],
-        json['poster_path'],
-        json['popularity'],
-        json['original_language'],
-        json['country'],
-        json['original_title'],
-        json['genre'],
-        json['backdrop_path'],
-        json['adult'],
-        json['overview'],
-        json['release_date'],
-        json['runTime']);
-  }
+  Movie.fromJson(Map<String, dynamic> json) 
+       :movieId= json['id'],
+        rate= json['vote_average'],
+        title= json['title'],
+        popularity= json['popularity'],
+        posterPath=json['poster_path'],
+        originalLanguage=json['original_language'],
+        originalTitle= json['original_title'],
+        genre_ids= json['genre_ids'],
+        backdropPath= json['backdrop_path'],
+        adult=json['adult'],
+        overview=json['overview'],
+        releaseDate=json['release_date'],
+        runtime=json['runtime'] != null? json['runtime']: 120;
+  
 }

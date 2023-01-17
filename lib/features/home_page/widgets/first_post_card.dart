@@ -42,13 +42,13 @@ class _FirstPosterCardState extends State<FirstPosterCard> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text("${widget.movie.genre[0]}...",
+                  child: Text("${widget.movie.genre_ids[0]}...",
                       style: theme.textTheme.subtitle2),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                      "Year :${widget.movie.releaseDate.year}  Duration : ${widget.movie.runTime}",
+                      "Year :${widget.movie.releaseDate}  Duration : ${widget.movie.runtime}",
                       style: theme.textTheme.subtitle2),
                 ),
               ]),
