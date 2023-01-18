@@ -10,7 +10,6 @@ import 'package:movie_web_app/features/search/pages/search_page.dart';
 import 'package:movie_web_app/features/sign_in_sign_up/login_sign_up_page.dart';
 import 'package:movie_web_app/features/watch_list/pages/watch_list_page.dart';
 import 'package:movie_web_app/models/contents.dart';
-import 'package:movie_web_app/models/filters.dart';
 import 'package:movie_web_app/models/movie.dart';
 import 'package:movie_web_app/models/picked_filters.dart';
 import 'package:movie_web_app/models/user_account.dart';
@@ -29,36 +28,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   PickedFilters pickedFilters = PickedFilters();
 
-  List<SwipeItem> swipeItems = <SwipeItem>[];
+  List<SwipeItem> _swipeItems = <SwipeItem>[];
   MatchEngine _matchEngine = MatchEngine();
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   late Future<List<Movie>?> popularMovies;
   late Future<List<Movie>?> upcomingMovies;
 
   int number = Random().nextInt(7);
-  List<String> getNames(AsyncSnapshot<dynamic> snapshot) {
-    return [
-      "Swipe To Read Some Facts About Our Movie Of The Day",
-      snapshot.data[number].releaseDate,
-      "+18 : ${snapshot.data[number].adult}",
-      "popularity : ${snapshot.data[number].popularity}"
-    ];
-  }
-
-  void getSwipeItems(AsyncSnapshot<dynamic> snapshot) {
-    List<String> names = getNames(snapshot);
-    for (int i = 0; i < names.length; i++) {
-      swipeItems.add(SwipeItem(
-        content: Content(text: names[i], color: colors[i]),
-      ));
-    }
-  }
 
   @override
   void initState() {
     super.initState();
 
-    //_matchEngine = MatchEngine(swipeItems: swipeItems);
     popularMovies = getmovies(Urls.popularMovies);
     upcomingMovies = getmovies(Urls.upcomingMovies);
   }
@@ -156,12 +137,88 @@ class _HomePageState extends State<HomePage> {
                         child: FutureBuilder(
                           future: popularMovies,
                           builder: ((context, snapshot) {
-                            return SizedBox(
-                                height: screenHeight / 2,
-                                width: screenWidth / 2,
-                                child: FirstPosterCard(
-                                    movie: snapshot.data![number]));
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              return SizedBox(
+                                  height: screenHeight / 2,
+                                  width: screenWidth / 2,
+                                  child: FirstPosterCard(
+                                      movie: snapshot.data![number]));
+                            } else {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
                           }),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: SizedBox(
+                          height: screenHeight / 3,
+                          width: screenWidth / 3,
+                          child: FutureBuilder(
+                            future: popularMovies,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                List<String> names = [
+                                  "Swipe To Read Some Facts About Our Movie Of The Day",
+                                  "It's original Title : " +
+                                      snapshot.data![number].originalTitle,
+                                  "Is it +18 : ${snapshot.data![number].adult}",
+                                  "It's popularity is ${snapshot.data![number].popularity}",
+                                ];
+                                for (int i = 0; i < names.length; i++) {
+                                  _swipeItems.add(SwipeItem(
+                                    content: Content(
+                                        text: names[i], color: colors[i]),
+                                  ));
+                                }
+
+                                _matchEngine =
+                                    MatchEngine(swipeItems: _swipeItems);
+                                return SwipeCards(
+                                  matchEngine: _matchEngine,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                          color:
+                                              _swipeItems[index].content.color,
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(25))),
+                                      alignment: Alignment.center,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(20),
+                                        child: Text(
+                                          _swipeItems[index].content.text,
+                                          style: theme.textTheme.subtitle2,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  onStackFinished: () {
+                                    setState(() {
+                                      _matchEngine =
+                                          MatchEngine(swipeItems: _swipeItems);
+                                    });
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content: Text("Enough Facts For Today"),
+                                      duration: Duration(milliseconds: 1000),
+                                    ));
+                                  },
+                                  upSwipeAllowed: true,
+                                );
+                              } else {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                            },
+                          ),
                         ),
                       ),
                     ],
@@ -181,13 +238,19 @@ class _HomePageState extends State<HomePage> {
                         future: popularMovies,
                         builder: (BuildContext context,
                             AsyncSnapshot<dynamic> snapshot) {
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (BuildContext context, int index) {
-                              return PosterCard(movie: snapshot.data[index]);
-                            },
-                            itemCount: snapshot.data.length,
-                          );
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (BuildContext context, int index) {
+                                return PosterCard(movie: snapshot.data[index]);
+                              },
+                              itemCount: snapshot.data.length,
+                            );
+                          } else {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
                         },
                       ),
                     ),
@@ -207,30 +270,23 @@ class _HomePageState extends State<HomePage> {
                         future: upcomingMovies,
                         builder: (BuildContext context,
                             AsyncSnapshot<dynamic> snapshot) {
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (BuildContext context, int index) {
-                              return PosterCard(movie: snapshot.data[index]);
-                            },
-                            itemCount: snapshot.data.length,
-                          );
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (BuildContext context, int index) {
+                                return PosterCard(movie: snapshot.data[index]);
+                              },
+                              itemCount: snapshot.data.length,
+                            );
+                          } else {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
                         },
                       ),
                     ),
                   ),
-                  /*Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      height: screenHeight / 3,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (BuildContext context, int index) {
-                          return PosterCard(movie: movies[index]);
-                        },
-                        itemCount: movies.length,
-                      ),
-                    ),
-                  )*/
                 ],
               ),
             ),

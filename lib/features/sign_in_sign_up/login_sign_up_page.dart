@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_web_app/features/home_page/pages/home_page.dart';
+import 'package:movie_web_app/service/data_sources.dart';
 import 'package:movie_web_app/shared/colors.dart';
 
 class LoginOrSignUpPage extends StatefulWidget {
@@ -12,6 +13,8 @@ class LoginOrSignUpPage extends StatefulWidget {
 class _LoginOrSignUpPageState extends State<LoginOrSignUpPage> {
   bool passwordHidden = true;
   bool newLogin = false;
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,6 +129,7 @@ class _LoginOrSignUpPageState extends State<LoginOrSignUpPage> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 40),
                           child: TextField(
+                              controller: userNameController,
                               style: const TextStyle(color: AppColors.white),
                               decoration: InputDecoration(
                                   labelText: 'Enter here your username',
@@ -153,6 +157,7 @@ class _LoginOrSignUpPageState extends State<LoginOrSignUpPage> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 40),
                           child: TextField(
+                              controller: passwordController,
                               obscureText: passwordHidden,
                               obscuringCharacter: '*',
                               style: const TextStyle(color: AppColors.white),
@@ -194,17 +199,54 @@ class _LoginOrSignUpPageState extends State<LoginOrSignUpPage> {
                       const SizedBox(height: 20),
                       InkWell(
                           onTap: () {
-                            // TODO : connect or add user
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: ((context) => const HomePage())));
-                            newLogin
-                                ? ScaffoldMessenger.of(context).showSnackBar(
+                            if (newLogin) {
+                              bool auth = false;
+                              DataSources.signUp(userNameController.text,
+                                      passwordController.text)
+                                  .then((result) {
+                                setState(() {
+                                  auth = result;
+                                });
+                              });
+                              if (auth) {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: ((context) => const HomePage())));
+                                ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                        content: Text("Happy to have you!")))
-                                : ScaffoldMessenger.of(context).showSnackBar(
+                                        content: Text("Happy to have you!")));
+                              } else {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: ((context) =>
+                                        const LoginOrSignUpPage())));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text("Error try again!")));
+                              }
+                            } else {
+                              bool auth = false;
+                              DataSources.login(userNameController.text,
+                                      passwordController.text)
+                                  .then((result) {
+                                setState(() {
+                                  auth = result;
+                                });
+                              });
+                              if (auth) {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: ((context) => const HomePage())));
+                                ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         content:
                                             Text("Glad to see you back!")));
+                              } else {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: ((context) =>
+                                        const LoginOrSignUpPage())));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text("Error try again!")));
+                              }
+                            }
                           },
                           child: Container(
                             width: 120,

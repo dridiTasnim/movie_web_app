@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_web_app/models/chosen_filters.dart';
 import 'package:movie_web_app/models/filters.dart';
+import 'package:movie_web_app/service/data_sources.dart';
 import 'package:movie_web_app/shared/colors.dart';
 import 'package:animated_text_kit/animated_text_kit.dart'
     show AnimatedTextKit, TypewriterAnimatedText;
@@ -13,6 +14,8 @@ class RecommandationPage extends StatefulWidget {
 }
 
 class _RecommandationPageState extends State<RecommandationPage> {
+  TextEditingController recommandationController = TextEditingController();
+  String result = '';
   ChosenFilters chosenFilters = ChosenFilters();
   @override
   Widget build(BuildContext context) {
@@ -170,16 +173,22 @@ class _RecommandationPageState extends State<RecommandationPage> {
                 width: double.infinity,
                 height: 34,
                 child: InkWell(
-                    onTap: (() {}),
+                    onTap: (() {
+                      DataSources.askChatGPT(chosenFilters).then((result) {
+                        setState(() {
+                          recommandationController.text = result;
+                          result = result;
+                        });
+                      });
+                    }),
                     child: const SizedBox(
                       width: double.infinity,
                       child: Center(
-                        child: Text('Submit',
-                            style: TextStyle(
-                                color: AppColors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600)),
-                      ),
+                          child: Text('Submit',
+                              style: TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600))),
                     )),
               ),
               const SizedBox(height: 18),
@@ -190,24 +199,12 @@ class _RecommandationPageState extends State<RecommandationPage> {
                     color: AppColors.grey,
                     borderRadius: BorderRadius.circular(16)),
                 child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: AnimatedTextKit(
-                    animatedTexts: [
-                      TypewriterAnimatedText(
-                        'Here goes your recommandation !!',
-                        textStyle: const TextStyle(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(recommandationController.text,
+                        style: const TextStyle(
                             color: AppColors.white,
                             fontSize: 24,
-                            fontWeight: FontWeight.w600),
-                        speed: const Duration(milliseconds: 200),
-                      ),
-                    ],
-                    totalRepeatCount: 1,
-                    pause: const Duration(milliseconds: 10),
-                    displayFullTextOnTap: true,
-                    stopPauseOnTap: true,
-                  ),
-                ),
+                            fontWeight: FontWeight.w600))),
               )),
               const SizedBox(height: 32),
             ],
