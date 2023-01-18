@@ -11,7 +11,6 @@ class DataSources {
 
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body)['results'];
-      debugPrint(Movie.fromJson(parsed[1]).toString());
       List<Movie> movies =
           List<Movie>.from(parsed.map((json) => Movie.fromJson(json)));
       return movies;

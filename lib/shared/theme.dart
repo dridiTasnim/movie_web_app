@@ -52,13 +52,12 @@ class Themedata {
             selectedColor: Color.fromARGB(255, 62, 100, 149),
             disabledColor: AppColors.secondary,
             showCheckmark: false,
-            backgroundColor: AppColors.secondary,
+            backgroundColor: AppColors.primary,
             labelStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontFamily: 'Outfit',
-              fontWeight: FontWeight.w500,
-            ),
+                color: Colors.white,
+                fontSize: 18,
+                fontFamily: 'Outfit',
+                fontWeight: FontWeight.w500),
             padding: EdgeInsets.all(8)),
         textButtonTheme: TextButtonThemeData(
             style: TextButton.styleFrom(

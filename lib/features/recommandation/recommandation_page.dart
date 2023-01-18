@@ -1,5 +1,3 @@
-// ignore_for_file: depend_on_referenced_packages
-
 import 'package:flutter/material.dart';
 import 'package:movie_web_app/models/chosen_filters.dart';
 import 'package:movie_web_app/models/filters.dart';
@@ -171,13 +169,18 @@ class _RecommandationPageState extends State<RecommandationPage> {
                     borderRadius: BorderRadius.circular(10)),
                 width: double.infinity,
                 height: 34,
-                child: TextButton(
-                    onPressed: (() {}),
-                    child: const Text('Submit',
-                        style: TextStyle(
-                            color: AppColors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600))),
+                child: InkWell(
+                    onTap: (() {}),
+                    child: const SizedBox(
+                      width: double.infinity,
+                      child: Center(
+                        child: Text('Submit',
+                            style: TextStyle(
+                                color: AppColors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600)),
+                      ),
+                    )),
               ),
               const SizedBox(height: 18),
               Expanded(
