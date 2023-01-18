@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_web_app/features/watch_list/bloc/watch_list_bloc.dart';
+import 'package:movie_web_app/models/filters.dart';
 import 'package:movie_web_app/models/movie.dart';
 import 'package:movie_web_app/shared/colors.dart';
 
@@ -43,7 +44,7 @@ class _MoviePageState extends State<MoviePage> {
                             bottomLeft: Radius.circular(25),
                             bottomRight: Radius.circular(25)),
                         child: Image.network(
-                          widget.movie.backdropPath,
+                          'https://image.tmdb.org/t/p/w500${widget.movie.backdropPath}',
                           fit: BoxFit.fill,
                         ),
                       ),
@@ -57,7 +58,7 @@ class _MoviePageState extends State<MoviePage> {
                     child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(25)),
                       child: Image.network(
-                        widget.movie.posterPath,
+                        'https://image.tmdb.org/t/p/w500${widget.movie.posterPath}',
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -80,8 +81,7 @@ class _MoviePageState extends State<MoviePage> {
                           const SizedBox(
                             height: 10,
                           ),
-                          Text(
-                              "Release Date : ${widget.movie.releaseDate}",
+                          Text("Release Date : ${widget.movie.releaseDate}",
                               style: theme.textTheme.subtitle2),
                           const SizedBox(
                             height: 10,
@@ -205,7 +205,7 @@ class _MoviePageState extends State<MoviePage> {
                                         Radius.circular(25))),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text(widget.movie.genre_ids[0].toString(),
+                                  child: Text(genresNames[genre].toString(),
                                       style: theme.textTheme.bodyText1),
                                 ),
                               ),

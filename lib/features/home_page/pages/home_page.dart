@@ -14,6 +14,7 @@ import 'package:movie_web_app/models/filters.dart';
 import 'package:movie_web_app/models/movie.dart';
 import 'package:movie_web_app/models/picked_filters.dart';
 import 'package:movie_web_app/models/user_account.dart';
+import 'package:movie_web_app/service/urls.dart';
 import 'package:movie_web_app/shared/colors.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:movie_web_app/service/data_sources.dart';
@@ -26,40 +27,44 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Movie> movies = [];
   PickedFilters pickedFilters = PickedFilters();
 
   List<SwipeItem> swipeItems = <SwipeItem>[];
   MatchEngine _matchEngine = MatchEngine();
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-  late Future<List<Movie>?> movies1;
-  int number = Random().nextInt(7);
-  @override
-  void initState() {
-    super.initState();
+  late Future<List<Movie>?> popularMovies;
+  late Future<List<Movie>?> upcomingMovies;
 
-    () async {
-      movies = [movie1, movie2, movie3, movie5, movie6, movie7, movie8];
-    }();
-    List<String> names = [
+  int number = Random().nextInt(7);
+  List<String> getNames(AsyncSnapshot<dynamic> snapshot) {
+    return [
       "Swipe To Read Some Facts About Our Movie Of The Day",
-      movies[number].releaseDate,
-     "+18 : "+movies[number].adult.toString(),
-     "popularity : "+ movies[number].popularity.toString()
+      snapshot.data[number].releaseDate,
+      "+18 : ${snapshot.data[number].adult}",
+      "popularity : ${snapshot.data[number].popularity}"
     ];
+  }
+
+  void getSwipeItems(AsyncSnapshot<dynamic> snapshot) {
+    List<String> names = getNames(snapshot);
     for (int i = 0; i < names.length; i++) {
       swipeItems.add(SwipeItem(
         content: Content(text: names[i], color: colors[i]),
       ));
     }
-
-    _matchEngine = MatchEngine(swipeItems: swipeItems);
-    // _getmovies();
-    //print(movies1);
   }
 
-  void _getmovies() {
-    movies1 = DataSources().getMovies();
+  @override
+  void initState() {
+    super.initState();
+
+    //_matchEngine = MatchEngine(swipeItems: swipeItems);
+    popularMovies = getmovies(Urls.popularMovies);
+    upcomingMovies = getmovies(Urls.upcomingMovies);
+  }
+
+  Future<List<Movie>?> getmovies(String url) async {
+    return await DataSources().getMovies(url);
   }
 
   @override
@@ -144,7 +149,7 @@ class _HomePageState extends State<HomePage> {
               child: ListView(
                 scrollDirection: Axis.vertical,
                 children: [
-                 /* Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: List<Widget>.generate(
                       homePageGenres.length,
@@ -168,54 +173,63 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     ).toList(),
-                  ),*/
+                  ),
                   Row(
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                            height: screenHeight / 2,
-                            width: screenWidth / 2,
-                            child: FirstPosterCard(movie: movies[number])),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: SizedBox(
-                          height: screenHeight / 3,
-                          width: screenWidth / 3,
-                          child: SwipeCards(
-                            matchEngine: _matchEngine,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                    color: swipeItems[index].content.color,
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(25))),
-                                alignment: Alignment.center,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20),
-                                  child: Text(
-                                    swipeItems[index].content.text,
-                                    style: theme.textTheme.subtitle2,
-                                  ),
-                                ),
-                              );
-                            },
-                            onStackFinished: () {
-                              setState(() {
-                                _matchEngine =
-                                    MatchEngine(swipeItems: swipeItems);
-                              });
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: Text("Enough Facts For Today"),
-                                duration: Duration(milliseconds: 1000),
-                              ));
-                            },
-                            upSwipeAllowed: true,
-                          ),
+                        child: FutureBuilder(
+                          future: popularMovies,
+                          builder: ((context, snapshot) {
+                            return SizedBox(
+                                height: screenHeight / 2,
+                                width: screenWidth / 2,
+                                child: FirstPosterCard(
+                                    movie: snapshot.data![number]));
+                          }),
                         ),
                       ),
+                      // Padding(
+                      //   padding: const EdgeInsets.all(20),
+                      //   child: SizedBox(
+                      //     height: screenHeight / 3,
+                      //     width: screenWidth / 3,
+                      //     child: FutureBuilder(builder: (context, snapshot) {
+                      //       return SwipeCards(
+                      //         matchEngine: _matchEngine,
+                      //         itemBuilder: (BuildContext context, int index) {
+                      //           getSwipeItems(snapshot);
+                      //           return Container(
+                      //             decoration: BoxDecoration(
+                      //                 color: swipeItems[index].content.color,
+                      //                 borderRadius: const BorderRadius.all(
+                      //                     Radius.circular(25))),
+                      //             alignment: Alignment.center,
+                      //             child: Padding(
+                      //               padding: const EdgeInsets.all(20),
+                      //               child: Text(
+                      //                 swipeItems[index].content.text,
+                      //                 style: theme.textTheme.subtitle2,
+                      //               ),
+                      //             ),
+                      //           );
+                      //         },
+                      //         onStackFinished: () {
+                      //           setState(() {
+                      //             _matchEngine =
+                      //                 MatchEngine(swipeItems: swipeItems);
+                      //           });
+                      //           ScaffoldMessenger.of(context)
+                      //               .showSnackBar(const SnackBar(
+                      //             content: Text("Enough Facts For Today"),
+                      //             duration: Duration(milliseconds: 1000),
+                      //           ));
+                      //         },
+                      //         upSwipeAllowed: true,
+                      //       );
+                      //     }),
+                      //   ),
+                      // ),
                     ],
                   ),
                   Padding(
@@ -229,12 +243,18 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
                       height: screenHeight / 3,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (BuildContext context, int index) {
-                          return PosterCard(movie: movies[index]);
+                      child: FutureBuilder(
+                        future: popularMovies,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<dynamic> snapshot) {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return PosterCard(movie: snapshot.data[index]);
+                            },
+                            itemCount: snapshot.data.length,
+                          );
                         },
-                        itemCount: movies.length,
                       ),
                     ),
                   ),
@@ -249,6 +269,25 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
                       height: screenHeight / 3,
+                      child: FutureBuilder(
+                        future: upcomingMovies,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<dynamic> snapshot) {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return PosterCard(movie: snapshot.data[index]);
+                            },
+                            itemCount: snapshot.data.length,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  /*Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: screenHeight / 3,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (BuildContext context, int index) {
@@ -257,7 +296,7 @@ class _HomePageState extends State<HomePage> {
                         itemCount: movies.length,
                       ),
                     ),
-                  )
+                  )*/
                 ],
               ),
             ),

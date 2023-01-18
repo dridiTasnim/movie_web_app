@@ -35,7 +35,7 @@ class _WatchListCardState extends State<WatchListCard> {
                   closedBuilder:
                       (BuildContext context, void Function() action) {
                     return Image.network(
-                      widget.movie.posterPath,
+                      'https://image.tmdb.org/t/p/w500${widget.movie.posterPath}',
                       fit: BoxFit.fill,
                       width: screenWidth / 3,
                     );

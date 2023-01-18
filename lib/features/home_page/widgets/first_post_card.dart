@@ -25,7 +25,7 @@ class _FirstPosterCardState extends State<FirstPosterCard> {
           ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               child: Image.network(
-                widget.movie.posterPath,
+                'https://image.tmdb.org/t/p/w500${widget.movie.posterPath}',
                 fit: BoxFit.fill,
                 width: screenWidth / 2,
               )),
