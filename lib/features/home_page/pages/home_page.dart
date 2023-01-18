@@ -150,31 +150,6 @@ class _HomePageState extends State<HomePage> {
                 scrollDirection: Axis.vertical,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: List<Widget>.generate(
-                      homePageGenres.length,
-                      (int index) {
-                        return FilterChip(
-                          label: Text(homePageGenres.keys.toList()[index]),
-                          avatar: Image.asset(
-                            homePageGenres.values.toList()[index],
-                            width: 20,
-                            height: 20,
-                            fit: BoxFit.fill,
-                          ),
-                          selected: pickedFilters.pickedGenre !=
-                              homePageGenres.keys.toList()[index],
-                          onSelected: (bool selected) {
-                            setState(() {
-                              pickedFilters.pickedGenre =
-                                  homePageGenres.keys.toList()[index];
-                            });
-                          },
-                        );
-                      },
-                    ).toList(),
-                  ),
-                  Row(
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -189,47 +164,6 @@ class _HomePageState extends State<HomePage> {
                           }),
                         ),
                       ),
-                      // Padding(
-                      //   padding: const EdgeInsets.all(20),
-                      //   child: SizedBox(
-                      //     height: screenHeight / 3,
-                      //     width: screenWidth / 3,
-                      //     child: FutureBuilder(builder: (context, snapshot) {
-                      //       return SwipeCards(
-                      //         matchEngine: _matchEngine,
-                      //         itemBuilder: (BuildContext context, int index) {
-                      //           getSwipeItems(snapshot);
-                      //           return Container(
-                      //             decoration: BoxDecoration(
-                      //                 color: swipeItems[index].content.color,
-                      //                 borderRadius: const BorderRadius.all(
-                      //                     Radius.circular(25))),
-                      //             alignment: Alignment.center,
-                      //             child: Padding(
-                      //               padding: const EdgeInsets.all(20),
-                      //               child: Text(
-                      //                 swipeItems[index].content.text,
-                      //                 style: theme.textTheme.subtitle2,
-                      //               ),
-                      //             ),
-                      //           );
-                      //         },
-                      //         onStackFinished: () {
-                      //           setState(() {
-                      //             _matchEngine =
-                      //                 MatchEngine(swipeItems: swipeItems);
-                      //           });
-                      //           ScaffoldMessenger.of(context)
-                      //               .showSnackBar(const SnackBar(
-                      //             content: Text("Enough Facts For Today"),
-                      //             duration: Duration(milliseconds: 1000),
-                      //           ));
-                      //         },
-                      //         upSwipeAllowed: true,
-                      //       );
-                      //     }),
-                      //   ),
-                      // ),
                     ],
                   ),
                   Padding(

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:movie_web_app/features/home_page/widgets/poster_card.dart';
+import 'package:movie_web_app/models/movie.dart';
+import 'package:movie_web_app/service/data_sources.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -9,11 +12,23 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   TextEditingController searchController = TextEditingController();
+  List<Movie> movies = [];
+  late List<Movie>? searchedMovies;
+
+  bool found = false;
+  @override
+  initState() {
+    super.initState();
+  }
+
+  Future<List<Movie>?> getMovies(String key) async {
+    return await DataSources().searchMovies(key);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     double screenHeight = MediaQuery.of(context).size.height;
-    var movies = [];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF1D2024),
@@ -33,7 +48,14 @@ class _SearchPageState extends State<SearchPage> {
                 ]),
             child: TextField(
               onChanged: ((value) {
-                setState(() {});
+                getMovies(searchController.text).then((result) {
+                  setState(() {
+                    searchedMovies = result;
+                    if (searchedMovies != null) {
+                      movies = searchedMovies!;
+                    }
+                  });
+                });
               }),
               controller: searchController,
               cursorColor: Colors.white,
@@ -96,7 +118,16 @@ class _SearchPageState extends State<SearchPage> {
                         ],
                       ),
                     )
-                  : Container(),
+                  : SizedBox(
+                      height: screenHeight * 0.8,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: movies.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return PosterCard(movie: movies[index]);
+                        },
+                      ),
+                    ),
         ],
       ),
     );
