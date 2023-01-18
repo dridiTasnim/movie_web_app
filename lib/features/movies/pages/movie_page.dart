@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_web_app/features/home_page/pages/home_page.dart';
 import 'package:movie_web_app/features/watch_list/bloc/watch_list_bloc.dart';
 import 'package:movie_web_app/models/filters.dart';
 import 'package:movie_web_app/models/movie.dart';
@@ -48,6 +49,16 @@ class _MoviePageState extends State<MoviePage> {
                           fit: BoxFit.fill,
                         ),
                       ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 10,
+                    left: 10,
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back_ios),
+                      onPressed: (() => Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: ((context) => HomePage())))),
                     ),
                   ),
                   Positioned(
