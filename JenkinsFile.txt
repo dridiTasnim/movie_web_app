@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    environment {
+        GITHUB_CREDENTIALS = credentials('git-cred-02112')
+	DOCKERHUB_CREDENTIALS = credentials('DockerHubCredentials')
+    }
+    stages {
+        stage('Pull Code from GitHub') {
+            steps {
+                 script {
+                    withCredentials([usernamePassword(credentialsId: 'git-cred-02112', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_PASSWORD')]) {
+                        sh "git config --global credential.helper store"
+                        sh "git clone https://${GITHUB_USERNAME}:${GITHUB_PASSWORD}@github.com/dridiTasnim/portfolio-tasnim-dridi.git"
+                    }
+            }
+        }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Utilisez Docker pour construire votre image
+                    sh "docker build -t tasnimPortfolio ."
+                }
+            }
+        }
+
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                        sh "docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD"
+                        sh "docker push tasnimPortfolio"
+                    }
+                }
+            }
+        }
+    }
+}
