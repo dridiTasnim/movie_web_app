@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         GITHUB_CREDENTIALS = credentials('git-cred-02112')
-	DOCKERHUB_CREDENTIALS = credentials('DockerHubCredentials')
+	DOCKERHUB_CREDENTIALS = credentials('DockerHub')
     }
     stages {
         stage('Pull Code from GitHub') {
@@ -12,6 +12,7 @@ pipeline {
                         sh "git config --global credential.helper store"
                         sh "git clone https://${GITHUB_USERNAME}:${GITHUB_PASSWORD}@github.com/dridiTasnim/movie_web_app.git"
                     }
+                }
             }
         }
         
